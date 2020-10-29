@@ -1,2 +1,2 @@
 # watcha-integrator
-A wrapper for file_sharing Nextcloud app
+An app to which handle Nextcloud integration with Watcha products.
