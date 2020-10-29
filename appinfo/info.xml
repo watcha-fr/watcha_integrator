@@ -12,7 +12,8 @@
 	<author>Charlie Calendre</author>
 	<author>Kevin Icol</author>
 	<author>Sylvain Morisse</author>
-
+	<namespace>Watcha_Integrator</namespace>
+	<default_enable/>
 	<types>
 		<filesystem/>
 	</types>
