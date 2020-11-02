@@ -75,6 +75,7 @@ class WatchaShareAPIController extends ShareAPIController
     ) {
         $this->userId = $userId;
         $this->config = $config;
+        $this->l = $l10n;
 
         $requester = $request->getParam("requester");
         parent::__construct(
@@ -118,6 +119,62 @@ class WatchaShareAPIController extends ShareAPIController
             $permissions,
             $shareType,
             $shareWith,
+        );
+
+        return $response;
+    }
+
+    /**
+	 * Delete a share
+	 *
+	 * @NoAdminRequired
+	 *
+	 * @param string $id
+     * @throws OCSForbiddenException
+	 */
+    public function deleteWatchaShare(
+        string $id
+    ) {
+        if ($this->userId !== $this->config->getSystemValue('nextcloud_service_account_name')) {
+            throw new OCSForbiddenException($this->l->t('Only the Synapse account service can create a share.'));
+        }
+
+        $response = $this->deleteShare(
+            $id
+        );
+
+        return $response;
+    }
+
+    /**
+	 * The getShares function.
+	 *
+	 * @NoAdminRequired
+	 *
+	 * @param string $shared_with_me
+	 * @param string $reshares
+	 * @param string $subfiles
+	 * @param string $path
+     * @param string $include_tags
+	 * @throws OCSForbiddenException
+	 */
+    public function getWatchaShares(
+        string $shared_with_me = 'false',
+        string $reshares = 'false',
+        string $subfiles = 'false',
+        string $path = '',
+        string $include_tags = 'false'
+    ){
+        if ($this->userId !== $this->config->getSystemValue('nextcloud_service_account_name')) {
+            throw new OCSForbiddenException($this->l->t('Only the Synapse account service can create a share.'));
+        }
+
+        $response = $this->getShares(
+            $shared_with_me,
+            $reshares,
+            $subfiles,
+            $path,
+            $include_tags
         );
 
         return $response;
