@@ -25,6 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Watcha_Integrator\Controller;
 
+use OC\Watcha_Integrator\Extension\Synapse;
 use OCA\Files_Sharing\Controller\ShareAPIController;
 use OCP\App\IAppManager;
 use OCP\AppFramework\OCS\OCSForbiddenException;
@@ -110,7 +111,7 @@ class WatchaShareAPIController extends ShareAPIController
         int $shareType = -1,
         string $shareWith = null
     ) {
-        if ($this->userId !== $this->config->getSystemValue('nextcloud_service_account_name')) {
+        if ($this->userId !== Synapse::SERVICE_ACCOUNT_NAME) {
             throw new OCSForbiddenException($this->l->t('Only the Synapse account service can create a share.'));
         }
 
@@ -135,7 +136,7 @@ class WatchaShareAPIController extends ShareAPIController
     public function deleteWatchaShare(
         string $id
     ) {
-        if ($this->userId !== $this->config->getSystemValue('nextcloud_service_account_name')) {
+        if ($this->userId !== Synapse::SERVICE_ACCOUNT_NAME) {
             throw new OCSForbiddenException($this->l->t('Only the Synapse account service can create a share.'));
         }
 
@@ -165,7 +166,7 @@ class WatchaShareAPIController extends ShareAPIController
         string $path = '',
         string $include_tags = 'false'
     ){
-        if ($this->userId !== $this->config->getSystemValue('nextcloud_service_account_name')) {
+        if ($this->userId !== Synapse::SERVICE_ACCOUNT_NAME) {
             throw new OCSForbiddenException($this->l->t('Only the Synapse account service can create a share.'));
         }
 
