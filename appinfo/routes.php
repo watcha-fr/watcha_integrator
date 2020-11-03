@@ -29,11 +29,6 @@ return [
 			'verb' => 'POST',
 		],
 		[
-			'name' => 'WatchaShareAPI#getWatchaShares',
-			'url'  => '/api/v1/shares',
-			'verb' => 'GET',
-		],
-		[
 			'name' => 'WatchaShareAPI#deleteWatchaShare',
 			'url'  => '/api/v1/shares/{id}',
 			'verb' => 'DELETE',
