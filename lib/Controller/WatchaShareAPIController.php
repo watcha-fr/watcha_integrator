@@ -25,7 +25,7 @@ declare(strict_types=1);
 
 namespace OCA\Watcha_Integrator\Controller;
 
-use OC\Watcha_Integrator\Extension\Synapse;
+use OCA\Watcha_Integrator\Extension\Synapse;
 use OCA\Files_Sharing\Controller\ShareAPIController;
 use OCP\App\IAppManager;
 use OCP\AppFramework\OCS\OCSForbiddenException;

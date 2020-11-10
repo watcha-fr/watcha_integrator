@@ -30,7 +30,7 @@ namespace OCA\Watcha_Integrator;
 use GuzzleHttp\Client;
 use OC\Files\Filesystem;
 use OC\Files\View;
-use OC\Watcha_Integrator\Extension\Synapse;
+use OCA\Watcha_Integrator\Extension\Synapse;
 use OCA\Watcha_Integrator\Extension\Files;
 use OCP\Files\NotFoundException;
 use OCP\IConfig;
@@ -84,7 +84,8 @@ class FilesHooks
         $this->logger = $logger;
         $this->currentUser = $currentUser;
         $this->config = $config;
-        $this->client = new Client(["base_uri" => $this->config->getSystemValue('synapse_homeserver_url'), 'timeout' => 10]);
+        $this->synapseHomeserverUrl = $this->config->getSystemValue('synapse_homeserver_url');
+        $this->client = new Client(["base_uri" => $this->synapseHomeserverUrl, 'timeout' => 10]);
         $this->synapseAccessToken = $this->obtainSynapseAccessToken();
     }
 
@@ -276,26 +277,6 @@ class FilesHooks
     }
 
     /**
-     * Renaming a file inside the same folder (a/b to a/c)
-     *
-     * @param string $oldPath
-     * @param string $newPath
-     */
-    protected function fileRenaming($oldPath, $newPath)
-    {
-        $dirName = dirname($newPath);
-        $fileName = basename($newPath);
-        $oldFileName = basename($oldPath);
-
-        list(,, $fileId) = $this->getSourcePathAndOwner($newPath);
-        list($parentPath, $parentOwner, $parentId) = $this->getSourcePathAndOwner($dirName);
-        if ($fileId === 0 || $parentId === 0) {
-            // Could not find the file for the owner ...
-            return;
-        }
-    }
-
-    /**
      * Send request to Synapse for Watcha rooms notifications
      *
      * @param string $fileName         The name of the file
@@ -403,9 +384,9 @@ class FilesHooks
      */
     protected function obtainSynapseAccessToken()
     {
-        $homeserverUrl = $this->config->getSystemValue('synapse_homeserver_url');
+        $homeserverUrl = $this->synapseHomeserverUrl;
         $hostname = parse_url($homeserverUrl, PHP_URL_HOST);
-        $synapseUserId = "@" . Synapse::SERVICE_ACCOUNT_NAME . $hostname;
+        $synapseUserId = "@" . Synapse::SERVICE_ACCOUNT_NAME . ":" . $hostname;
         $password = hash_hmac("sha512", utf8_encode($synapseUserId), utf8_encode($this->config->getSystemValue('synapse_service_account_password')));
 
         $body = json_encode(

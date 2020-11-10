@@ -21,7 +21,7 @@
  *
  */
 
-namespace OCA\WatchaActivity\Extension;
+namespace OCA\Watcha_Integrator\Extension;
 
 class Synapse
 {
