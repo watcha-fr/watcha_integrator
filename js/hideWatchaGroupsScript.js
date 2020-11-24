@@ -1,41 +1,90 @@
+/**
+ * @copyright Copyright (c) 2020, Watcha SAS
+ *
+ * @author Kevin ICOL <kevin@watcha.fr>
+ *
+ * @license AGPL-3.0
+ *
+ * This code is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU Affero General Public License, version 3,
+ * as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU Affero General Public License for more details.
+ *
+ * You should have received a copy of the GNU Affero General Public License, version 3,
+ * along with this program. If not, see <http://www.gnu.org/licenses/>
+ *
+ */
+
+const watchaGroupPattern = "c4d96a06b758a7ed12f897690828e414_";
+
 window.addEventListener("load", hideWatchaGroup);
 
-window.addEventListener("unload", function () {
-    console.log("WINDOW UNLOAD");
-});
-
 function hideWatchaGroup() {
-    console.log("CONFIG", OCA.Files.App.getFilesConfig())
     if (document.body.id === "body-user") {
+        // Case of sharing tab:
+
         observeBodyMutation();
     } else if (document.body.id === "body-settings") {
-        // Cas des noms de groupe de la page personnelle :
-        var groupList = document.getElementById("groups-groups");
+        // Case of user settings
 
-        if (groupList) {
-            groupList.setAttribute("hidden", true);
+        let memberOfGroups = document.getElementById("groups-groups");
+        let groupList = document.getElementsByClassName("app-navigation-entry");
+
+        // Remove Watcha group from personal informations page:
+        if (memberOfGroups) {
+            let groupNameList = memberOfGroups.innerText.split(", ");
+            for (let groupName of groupNameList) {
+                if (groupName.startsWith(watchaGroupPattern)) {
+                    i = groupNameList.indexOf(groupName);
+                    groupNameList.splice(i, 1);
+                }
+            }
+            groupNameList = groupNameList.join(", ");
+            memberOfGroups.innerText = groupNameList;
+            memberOfGroups.style.fontWeight = "bold";
         }
 
-        // Cas des entrée de groupe dans la page utilisateurs :
-        groupEntries = document.getElementsByClassName("app-navigation-entry");
+        // Remove Watcha group from users page:
+        if (groupList) {
+            for (let entry of groupList) {
+                let entryTitle = entry.getAttribute("title");
 
-        for (entry of groupEntries) {
-            entry.style.display = "none";
+                if (entryTitle.startsWith(watchaGroupPattern)) {
+                    entry.style.display = "none";
+                }
+            }
         }
     }
 }
 
 function observeBodyMutation() {
     var callback = function (mutationsList) {
-        for (var mutation of mutationsList) {
-            var addedNodes = mutation["addedNodes"];
+        for (let mutation of mutationsList) {
+            let addedNodes = mutation["addedNodes"];
 
-            if (
-                addedNodes.length > 0 &&
-                (addedNodes[0]["className"] === "sharing-sharee-list" ||
-                    addedNodes[0]["className"] === "multiselect_element")
-            ) {
-                addedNodes[0].setAttribute("hidden", true);
+            if (addedNodes.length <= 0) {
+                continue;
+            }
+            let addedNode = addedNodes[0];
+
+            if (addedNode["className"] === "multiselect__element") {
+                if (addedNode.innerText.includes(watchaGroupPattern)) {
+                    addedNode.style.display = "none";
+                }
+            }
+
+            if (addedNode["className"] === "sharing-sharee-list") {
+                let sharingList = addedNode.childNodes;
+
+                for (let sharingEntry of sharingList) {
+                    if (sharingEntry.innerText.includes(watchaGroupPattern)) {
+                        sharingEntry.style.display = "none";
+                    }
+                }
             }
         }
     };

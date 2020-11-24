@@ -26,4 +26,4 @@
 \OCP\Util::connectHook('OC_Filesystem', 'rename', '\OCA\Watcha_Integrator\FilesHooksStatic', 'fileMove');
 \OCP\Util::connectHook('OC_Filesystem', 'post_rename', '\OCA\Watcha_Integrator\FilesHooksStatic', 'fileMovePost');
 \OCP\Util::connectHook('\OCA\Files_Trashbin\Trashbin', 'post_restore', '\OCA\Watcha_Integrator\FilesHooksStatic', 'fileRestore');
-OCP\Util::addScript('watcha_integrator', 'hideWatchaGroupsScript');
+\OCP\Util::addScript('watcha_integrator', 'hideWatchaGroupsScript');
