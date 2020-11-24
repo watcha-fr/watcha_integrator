@@ -20,10 +20,14 @@
  *
  */
 
+$config = \OC::$server->getConfig();
 \OCP\Util::connectHook('OC_Filesystem', 'post_create', '\OCA\Watcha_Integrator\FilesHooksStatic', 'fileCreate');
 \OCP\Util::connectHook('OC_Filesystem', 'post_update', '\OCA\Watcha_Integrator\FilesHooksStatic', 'fileUpdate');
 \OCP\Util::connectHook('OC_Filesystem', 'delete', '\OCA\Watcha_Integrator\FilesHooksStatic', 'fileDelete');
 \OCP\Util::connectHook('OC_Filesystem', 'rename', '\OCA\Watcha_Integrator\FilesHooksStatic', 'fileMove');
 \OCP\Util::connectHook('OC_Filesystem', 'post_rename', '\OCA\Watcha_Integrator\FilesHooksStatic', 'fileMovePost');
 \OCP\Util::connectHook('\OCA\Files_Trashbin\Trashbin', 'post_restore', '\OCA\Watcha_Integrator\FilesHooksStatic', 'fileRestore');
-\OCP\Util::addScript('watcha_integrator', 'hideWatchaGroupsScript');
+
+if ($config->getSystemValue('hiding_watcha_group_name', true)) {
+    \OCP\Util::addScript('watcha_integrator', 'hideWatchaGroupsScript');
+}
