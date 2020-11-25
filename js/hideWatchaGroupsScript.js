@@ -32,6 +32,7 @@ function hideWatchaGroup() {
 
     if (groupsFromPersonalPage) {
         updateGroupsNames(groupsFromPersonalPage);
+        groupsFromPersonalPage.style.fontWeight = "bold";
     }
 
     if (groupsFromLeftTabOnUsersPage) {
@@ -134,5 +135,4 @@ function updateGroupsNames(groupsNamesSpan) {
         }
     }
     groupsNamesSpan.innerText = groupsNames.join(", ");
-    groupsNamesSpan.style.fontWeight = "bold";
 }
