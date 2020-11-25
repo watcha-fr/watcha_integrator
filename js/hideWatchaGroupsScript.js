@@ -24,41 +24,28 @@ const watchaGroupPattern = "c4d96a06b758a7ed12f897690828e414_";
 window.addEventListener("load", hideWatchaGroup);
 
 function hideWatchaGroup() {
-    if (document.body.id === "body-user") {
-        // Case of sharing tab:
+    // Update DOM elements which are already loaded:
+    let groupsFromPersonalPage = document.getElementById("groups-groups");
+    let groupsFromLeftTabOnUsersPage = document.getElementsByClassName(
+        "app-navigation-entry"
+    );
 
-        observeBodyMutation();
-    } else if (document.body.id === "body-settings") {
-        // Case of user settings
+    if (groupsFromPersonalPage) {
+        updateGroupsNames(groupsFromPersonalPage);
+    }
 
-        let memberOfGroups = document.getElementById("groups-groups");
-        let groupList = document.getElementsByClassName("app-navigation-entry");
+    if (groupsFromLeftTabOnUsersPage) {
+        for (let group of groupsFromLeftTabOnUsersPage) {
+            let groupName = group.getAttribute("title");
 
-        // Remove Watcha group from personal informations page:
-        if (memberOfGroups) {
-            let groupNameList = memberOfGroups.innerText.split(", ");
-            for (let groupName of groupNameList) {
-                if (groupName.startsWith(watchaGroupPattern)) {
-                    i = groupNameList.indexOf(groupName);
-                    groupNameList.splice(i, 1);
-                }
-            }
-            groupNameList = groupNameList.join(", ");
-            memberOfGroups.innerText = groupNameList;
-            memberOfGroups.style.fontWeight = "bold";
-        }
-
-        // Remove Watcha group from users page:
-        if (groupList) {
-            for (let entry of groupList) {
-                let entryTitle = entry.getAttribute("title");
-
-                if (entryTitle.startsWith(watchaGroupPattern)) {
-                    entry.style.display = "none";
-                }
+            if (groupName.startsWith(watchaGroupPattern)) {
+                group.style.display = "none";
             }
         }
     }
+
+    // Update DOM elements which will be loaded after body mutations:
+    observeBodyMutation();
 }
 
 function observeBodyMutation() {
@@ -71,18 +58,63 @@ function observeBodyMutation() {
             }
             let addedNode = addedNodes[0];
 
-            if (addedNode["className"] === "multiselect__element") {
-                if (addedNode.innerText.includes(watchaGroupPattern)) {
-                    addedNode.style.display = "none";
+            // On share tab:
+            if (document.getElementById("sharing")) {
+                // Case of group search on file:
+                if (addedNode["className"] === "multiselect__element") {
+                    if (addedNode.innerText.includes(watchaGroupPattern)) {
+                        addedNode.style.display = "none";
+                    }
+                }
+
+                // Case of shares list on file:
+                if (addedNode["className"] === "sharing-sharee-list") {
+                    let sharingList = addedNode.childNodes;
+
+                    for (let sharingEntry of sharingList) {
+                        if (
+                            sharingEntry.innerText.includes(watchaGroupPattern)
+                        ) {
+                            sharingEntry.style.display = "none";
+                        }
+                    }
                 }
             }
 
-            if (addedNode["className"] === "sharing-sharee-list") {
-                let sharingList = addedNode.childNodes;
+            // On users page:
+            if (
+                addedNode.parentElement &&
+                addedNode.parentElement["className"] === "user-list-grid"
+            ) {
+                // Case of groups tags on user rows:
+                if (addedNode["className"] === "row") {
+                    let groupList = addedNode.getElementsByClassName(
+                        "groups"
+                    )[0];
+                    updateGroupsNames(groupList);
+                }
 
-                for (let sharingEntry of sharingList) {
-                    if (sharingEntry.innerText.includes(watchaGroupPattern)) {
-                        sharingEntry.style.display = "none";
+                // Case of groups tags on editable user rows:
+                if (addedNode["className"] === "row row--editable") {
+                    let tags = addedNode.getElementsByClassName(
+                        "multiselect__tag"
+                    );
+                    for (let tag of tags) {
+                        if (tag.innerText.includes(watchaGroupPattern)) {
+                            tag.style.display = "none";
+                        }
+                    }
+
+                    let subadminsFieldValues = addedNode.getElementsByClassName(
+                        "multiselect__element"
+                    );
+                    for (let groupName of subadminsFieldValues) {
+                        let group = groupName
+                            .querySelector(".name-parts")
+                            .getAttribute("title");
+                        if (group.includes(watchaGroupPattern)) {
+                            groupName.style.display = "none";
+                        }
                     }
                 }
             }
@@ -91,4 +123,16 @@ function observeBodyMutation() {
 
     var observer = new MutationObserver(callback);
     observer.observe(document.body, { childList: true, subtree: true });
+}
+
+function updateGroupsNames(groupsNamesSpan) {
+    let groupsNames = groupsNamesSpan.innerText.split(", ");
+    for (let groupName of groupsNames) {
+        if (groupName.includes(watchaGroupPattern)) {
+            i = groupsNames.indexOf(groupName);
+            groupsNames.splice(i, 1);
+        }
+    }
+    groupsNamesSpan.innerText = groupsNames.join(", ");
+    groupsNamesSpan.style.fontWeight = "bold";
 }
