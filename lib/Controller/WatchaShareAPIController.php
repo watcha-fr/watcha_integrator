@@ -112,7 +112,7 @@ class WatchaShareAPIController extends ShareAPIController
         int $shareType = -1,
         string $shareWith = null
     ) {
-        if ($this->userId !== $this->$serviceAccountName) {
+        if ($this->userId !== $this->serviceAccountName) {
             throw new OCSForbiddenException($this->l->t('Only the Synapse account service can create a share.'));
         }
 
@@ -137,7 +137,7 @@ class WatchaShareAPIController extends ShareAPIController
     public function deleteWatchaShare(
         string $id
     ) {
-        if ($this->userId !== $this->$serviceAccountName) {
+        if ($this->userId !== $this->serviceAccountName) {
             throw new OCSForbiddenException($this->l->t('Only the Synapse account service can create a share.'));
         }
 
@@ -167,7 +167,7 @@ class WatchaShareAPIController extends ShareAPIController
         string $path = '',
         string $include_tags = 'false'
     ){
-        if ($this->userId !== $this->$serviceAccountName) {
+        if ($this->userId !== $this->serviceAccountName) {
             throw new OCSForbiddenException($this->l->t('Only the Synapse account service can create a share.'));
         }
 
