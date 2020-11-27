@@ -86,7 +86,7 @@ class FilesHooks
         $this->config = $config;
         $this->synapseHomeserverUrl = $this->config->getSystemValue('synapse_homeserver_url');
         $this->serviceAccountName = $this->config->getSystemValue('synapse_account_name', Synapse::SERVICE_ACCOUNT_NAME);
-        $this->serviceAccountPassword = $this->config->getSystemValue('synapse_account_password') ?: $this->config->getSystemValue('service_account_password');
+        $this->serviceAccountPassword = $this->config->getSystemValue('synapse_account_password', $this->config->getSystemValue('service_account_password'));
         $this->client = new Client(["base_uri" => $this->synapseHomeserverUrl, 'timeout' => 10]);
         $this->synapseAccessToken = $this->obtainSynapseAccessToken();
     }
