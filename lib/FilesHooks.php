@@ -388,7 +388,7 @@ class FilesHooks
     {
         $homeserverUrl = $this->synapseHomeserverUrl;
         $hostname = parse_url($homeserverUrl, PHP_URL_HOST);
-        $synapseUserId = "@" . $this->serviceAccountName . ":" . $hostname;
+        $synapseUserId = "@{$this->serviceAccountName}:$hostname";
         $password = hash_hmac("sha512", utf8_encode($synapseUserId), utf8_encode($this->serviceAccountPassword));
 
         $body = json_encode(
