@@ -27,5 +27,5 @@ class Synapse
 {
 	const LOGIN_ENDPOINT = '/_matrix/client/r0/login';
 	const NOTIFICATION_ENDPOINT = '/_matrix/client/r0/watcha_room_nextcloud_activity';
-	const SERVICE_ACCOUNT_NAME = 'watcha_service_account';
+	const SERVICE_ACCOUNT_NAME = 'c4d96a06b758a7ed12f897690828e414_watcha_service_account';
 }
