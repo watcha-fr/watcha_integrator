@@ -404,7 +404,7 @@ class FilesHooks
         $response = $this->client->request('POST', Synapse::LOGIN_ENDPOINT, ['body' => $body, 'http_errors' => True]);
 
         if ($response->getStatusCode() === 200) {
-            $this->logger->info("Request success to " . $homeserverUrl . Synapse::LOGIN_ENDPOINT);
+            $this->logger->info("Request success to $homeserverUrl" . Synapse::LOGIN_ENDPOINT);
             $access_token = json_decode($response->getBody(), JSON_PRETTY_PRINT)['access_token'];
         }
 
