@@ -1,7 +1,7 @@
 <?php
 
 /**
- * @copyright Copyright (c) 2016, ownCloud, Inc.
+ * @copyright Copyright (c) 2020, Watcha.
  *
  * @author Kevin ICOL <kevin@watcha.fr>
  *
