@@ -64,7 +64,7 @@ function observeBodyMutation() {
             if (document.getElementById("sharing")) {
                 // Case of group search on file:
                 if (addedNode["className"] === "multiselect__element") {
-                    if (addedNode.innerText.includes(watchaGroupPattern)) {
+                    if (addedNode.innerText.includes(watchaGroupPrefix)) {
                         addedNode.style.display = "none";
                     }
                 }
