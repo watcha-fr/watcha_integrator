@@ -28,6 +28,6 @@ $config = \OC::$server->getConfig();
 \OCP\Util::connectHook('OC_Filesystem', 'post_rename', '\OCA\Watcha_Integrator\FilesHooksStatic', 'fileMovePost');
 \OCP\Util::connectHook('\OCA\Files_Trashbin\Trashbin', 'post_restore', '\OCA\Watcha_Integrator\FilesHooksStatic', 'fileRestore');
 
-if ($config->getSystemValue('hiding_watcha_group_name', true)) {
+if ($config->getSystemValue('hide_watcha_groups', true)) {
     \OCP\Util::addScript('watcha_integrator', 'hideWatchaGroupsScript');
 }
