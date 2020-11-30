@@ -22,35 +22,10 @@
 // echo -n watcha | md5sum
 const watchaGroupPrefix = "c4d96a06b758a7ed12f897690828e414_";
 
-window.addEventListener("load", hideWatchaGroup);
+window.addEventListener("load", hideLoadedElementOnSettingsPage);
+window.addEventListener("load", hideBodyMutation);
 
-function hideWatchaGroup() {
-    // Update DOM elements which are already loaded:
-    let groupsFromPersonalPage = document.getElementById("groups-groups");
-    let groupsFromLeftTabOnUsersPage = document.getElementsByClassName(
-        "app-navigation-entry"
-    );
-
-    if (groupsFromPersonalPage) {
-        updateGroupsNames(groupsFromPersonalPage);
-        groupsFromPersonalPage.style.fontWeight = "bold";
-    }
-
-    if (groupsFromLeftTabOnUsersPage) {
-        for (let group of groupsFromLeftTabOnUsersPage) {
-            let groupName = group.getAttribute("title");
-
-            if (groupName.startsWith(watchaGroupPrefix)) {
-                group.style.display = "none";
-            }
-        }
-    }
-
-    // Update DOM elements which will be loaded after body mutations:
-    observeBodyMutation();
-}
-
-function observeBodyMutation() {
+function hideBodyMutation() {
     var callback = function (mutationsList) {
         for (let mutation of mutationsList) {
             let addedNodes = mutation["addedNodes"];
@@ -60,71 +35,98 @@ function observeBodyMutation() {
             }
             let addedNode = addedNodes[0];
 
-            // On share tab:
             if (document.getElementById("sharing")) {
-                // Case of group search on file:
-                if (addedNode["className"] === "multiselect__element") {
-                    if (addedNode.innerText.includes(watchaGroupPrefix)) {
-                        addedNode.style.display = "none";
-                    }
-                }
-
-                // Case of shares list on file:
-                if (addedNode["className"] === "sharing-sharee-list") {
-                    let sharingList = addedNode.childNodes;
-
-                    for (let sharingEntry of sharingList) {
-                        if (
-                            sharingEntry.innerText.includes(watchaGroupPrefix)
-                        ) {
-                            sharingEntry.style.display = "none";
-                        }
-                    }
-                }
+                hideMutationsOnFilesPage(addedNode);
             }
 
-            // On users page:
             if (
                 addedNode.parentElement &&
                 addedNode.parentElement["className"] === "user-list-grid"
             ) {
-                // Case of groups tags on user rows:
-                if (addedNode["className"] === "row") {
-                    let groupList = addedNode.getElementsByClassName(
-                        "groups"
-                    )[0];
-                    updateGroupsNames(groupList);
-                }
-
-                // Case of groups tags on editable user rows:
-                if (addedNode["className"] === "row row--editable") {
-                    let tags = addedNode.getElementsByClassName(
-                        "multiselect__tag"
-                    );
-                    for (let tag of tags) {
-                        if (tag.innerText.includes(watchaGroupPrefix)) {
-                            tag.style.display = "none";
-                        }
-                    }
-
-                    let subadminsFieldValues = addedNode.getElementsByClassName(
-                        "multiselect__element"
-                    );
-                    for (let groupName of subadminsFieldValues) {
-                        let group = groupName
-                            .querySelector(".name-parts")
-                            .getAttribute("title");
-                        if (group.includes(watchaGroupPrefix)) {
-                            groupName.style.display = "none";
-                        }
-                    }
-                }
+                hideMutationsOnSettingsPage(addedNode);
             }
         }
     };
 
     var observer = new MutationObserver(callback);
     observer.observe(document.body, { childList: true, subtree: true });
+}
+
+function hideLoadedElementOnSettingsPage() {
+    let groupsFromPersonnalInformationsTab = document.getElementById(
+        "groups-groups"
+    );
+    let groupsFromUsersTab = document.getElementsByClassName(
+        "app-navigation-entry"
+    );
+
+    if (groupsFromPersonnalInformationsTab) {
+        updateGroupsNames(groupsFromPersonnalInformationsTab);
+        groupsFromPersonnalInformationsTab.style.fontWeight = "bold";
+    }
+
+    if (groupsFromUsersTab) {
+        for (let group of groupsFromUsersTab) {
+            let groupName = group.getAttribute("title");
+
+            if (groupName.startsWith(watchaGroupPrefix)) {
+                group.style.display = "none";
+            }
+        }
+    }
+}
+
+function hideMutationsOnFilesPage(addedNode) {
+    // Case of group search on file:
+    if (addedNode["className"] === "multiselect__element") {
+        if (addedNode.innerText.includes(watchaGroupPrefix)) {
+            addedNode.style.display = "none";
+        }
+    }
+
+    // Case of shares list on file:
+    if (addedNode["className"] === "sharing-sharee-list") {
+        let sharingList = addedNode.childNodes;
+
+        for (let sharingEntry of sharingList) {
+            if (sharingEntry.innerText.includes(watchaGroupPrefix)) {
+                sharingEntry.style.display = "none";
+            }
+        }
+    }
+}
+
+function hideMutationsOnSettingsPage(addedNode) {
+    // Case of groups tags on user rows:
+    if (addedNode["className"] === "row") {
+        let groupList = addedNode.querySelector(".groups");
+        updateGroupsNames(groupList);
+
+        let subAdminsGroupsList = addedNode.querySelector(".subAdminsGroups");
+        updateGroupsNames(subAdminsGroupsList);
+    }
+
+    // Case of groups tags on editable user rows:
+    if (addedNode["className"] === "row row--editable") {
+        let grouTags = addedNode.getElementsByClassName("multiselect__tag");
+        for (let groupTag of grouTags) {
+            if (groupTag.innerText.includes(watchaGroupPrefix)) {
+                groupTag.style.display = "none";
+            }
+        }
+
+        let subAdminsGroupTags = addedNode.getElementsByClassName(
+            "multiselect__element"
+        );
+        for (let subAdminsGroupTag of subAdminsGroupTags) {
+            let groupName = subAdminsGroupTag
+                .querySelector(".name-parts")
+                .getAttribute("title");
+            if (groupName.includes(watchaGroupPrefix)) {
+                subAdminsGroupTag.style.display = "none";
+            }
+        }
+    }
 }
 
 function updateGroupsNames(groupsNamesSpan) {
