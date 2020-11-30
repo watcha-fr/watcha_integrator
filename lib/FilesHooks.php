@@ -27,17 +27,17 @@
 
 namespace OCA\Watcha_Integrator;
 
+use GuzzleHttp\Client;
 use OC\Files\Filesystem;
 use OC\Files\View;
+use OCA\Watcha_Integrator\Extension\Synapse;
 use OCA\Watcha_Integrator\Extension\Files;
 use OCP\Files\NotFoundException;
+use OCP\IConfig;
 use OCP\ILogger;
 use OCP\IURLGenerator;
-use OCP\IConfig;
-use GuzzleHttp\Client;
 
 const NEXTCLOUD_ROOT_DIRECTORY = '/';
-//use OCP\IUser;
 
 /**
  * The class to handle the filesystem hooks
@@ -84,7 +84,10 @@ class FilesHooks
         $this->logger = $logger;
         $this->currentUser = $currentUser;
         $this->config = $config;
-        $this->client = new Client(["base_uri" => $this->config->getSystemValue('synapse_homeserver_url'), 'timeout' => 10]);
+        $this->synapseHomeserverUrl = $this->config->getSystemValue('synapse_homeserver_url');
+        $this->serviceAccountName = $this->config->getSystemValue('synapse_account_name', Synapse::SERVICE_ACCOUNT_NAME);
+        $this->serviceAccountPassword = $this->config->getSystemValue('synapse_account_password', $this->config->getSystemValue('service_account_password'));
+        $this->client = new Client(["base_uri" => $this->synapseHomeserverUrl, 'timeout' => 10]);
         $this->synapseAccessToken = $this->obtainSynapseAccessToken();
     }
 
@@ -276,26 +279,6 @@ class FilesHooks
     }
 
     /**
-     * Renaming a file inside the same folder (a/b to a/c)
-     *
-     * @param string $oldPath
-     * @param string $newPath
-     */
-    protected function fileRenaming($oldPath, $newPath)
-    {
-        $dirName = dirname($newPath);
-        $fileName = basename($newPath);
-        $oldFileName = basename($oldPath);
-
-        list(,, $fileId) = $this->getSourcePathAndOwner($newPath);
-        list($parentPath, $parentOwner, $parentId) = $this->getSourcePathAndOwner($dirName);
-        if ($fileId === 0 || $parentId === 0) {
-            // Could not find the file for the owner ...
-            return;
-        }
-    }
-
-    /**
      * Send request to Synapse for Watcha rooms notifications
      *
      * @param string $fileName         The name of the file
@@ -313,7 +296,7 @@ class FilesHooks
             )
         );
 
-        $this->client->request('POST', $this->config->getSystemValue('synapse_notification_endpoint'), ['headers' => ['Authorization' => 'Bearer ' . $this->synapseAccessToken], 'http_errors' => True, 'body' => $body]);
+        $this->client->request('POST', Synapse::NOTIFICATION_ENDPOINT, ['headers' => ['Authorization' => 'Bearer ' . $this->synapseAccessToken], 'http_errors' => True, 'body' => $body]);
     }
 
     /**
@@ -403,23 +386,25 @@ class FilesHooks
      */
     protected function obtainSynapseAccessToken()
     {
-        $synapseAdmin = $this->config->getSystemValue('synapse_admin_user');
-        $password = hash_hmac("sha512", utf8_encode($synapseAdmin), utf8_encode($this->config->getSystemValue('synapse_shared_secret')));
+        $homeserverUrl = $this->synapseHomeserverUrl;
+        $hostname = parse_url($homeserverUrl, PHP_URL_HOST);
+        $synapseUserId = "@{$this->serviceAccountName}:$hostname";
+        $password = hash_hmac("sha512", utf8_encode($synapseUserId), utf8_encode($this->serviceAccountPassword));
 
         $body = json_encode(
             array(
                 'type' => 'm.login.password',
-                'user' => $synapseAdmin,
+                'user' => $synapseUserId,
                 'password' => $password,
             )
         );
 
         $access_token = '';
 
-        $response = $this->client->request('POST', $this->config->getSystemValue('synapse_login_endpoint'), ['body' => $body, 'http_errors' => True]);
+        $response = $this->client->request('POST', Synapse::LOGIN_ENDPOINT, ['body' => $body, 'http_errors' => True]);
 
         if ($response->getStatusCode() === 200) {
-            $this->logger->info("Request success to " . $this->config->getSystemValue('synapse_homeserver_url') . $this->config->getSystemValue('synapse_login_endpoint'));
+            $this->logger->info("Request success to $homeserverUrl" . Synapse::LOGIN_ENDPOINT);
             $access_token = json_decode($response->getBody(), JSON_PRETTY_PRINT)['access_token'];
         }
 
