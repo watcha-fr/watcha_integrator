@@ -102,7 +102,7 @@ function observeBodyMutation() {
                         "multiselect__tag"
                     );
                     for (let tag of tags) {
-                        if (tag.innerText.includes(watchaGroupPattern)) {
+                        if (tag.innerText.includes(watchaGroupPrefix)) {
                             tag.style.display = "none";
                         }
                     }
