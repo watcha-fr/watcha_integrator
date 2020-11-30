@@ -114,7 +114,7 @@ function observeBodyMutation() {
                         let group = groupName
                             .querySelector(".name-parts")
                             .getAttribute("title");
-                        if (group.includes(watchaGroupPattern)) {
+                        if (group.includes(watchaGroupPrefix)) {
                             groupName.style.display = "none";
                         }
                     }
