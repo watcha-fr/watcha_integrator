@@ -130,7 +130,7 @@ function observeBodyMutation() {
 function updateGroupsNames(groupsNamesSpan) {
     let groupsNames = groupsNamesSpan.innerText.split(", ");
     for (let groupName of groupsNames) {
-        if (groupName.includes(watchaGroupPattern)) {
+        if (groupName.includes(watchaGroupPrefix)) {
             i = groupsNames.indexOf(groupName);
             groupsNames.splice(i, 1);
         }
