@@ -75,7 +75,7 @@ function observeBodyMutation() {
 
                     for (let sharingEntry of sharingList) {
                         if (
-                            sharingEntry.innerText.includes(watchaGroupPattern)
+                            sharingEntry.innerText.includes(watchaGroupPrefix)
                         ) {
                             sharingEntry.style.display = "none";
                         }
