@@ -40,7 +40,7 @@ function hideWatchaGroup() {
         for (let group of groupsFromLeftTabOnUsersPage) {
             let groupName = group.getAttribute("title");
 
-            if (groupName.startsWith(watchaGroupPattern)) {
+            if (groupName.startsWith(watchaGroupPrefix)) {
                 group.style.display = "none";
             }
         }
