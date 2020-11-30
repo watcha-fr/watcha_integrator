@@ -19,7 +19,8 @@
  *
  */
 
-const watchaGroupPattern = "c4d96a06b758a7ed12f897690828e414_";
+// echo -n watcha | md5sum
+const watchaGroupPrefix = "c4d96a06b758a7ed12f897690828e414_";
 
 window.addEventListener("load", hideWatchaGroup);
 
