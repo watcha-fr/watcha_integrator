@@ -33,6 +33,7 @@ use OCP\Files\IRootFolder;
 use OCP\IConfig;
 use OCP\IGroupManager;
 use OCP\IL10N;
+use OCP\IPreview;
 use OCP\IRequest;
 use OCP\IServerContainer;
 use OCP\IURLGenerator;
@@ -72,7 +73,8 @@ class WatchaShareAPIController extends ShareAPIController
         IL10N $l10n,
         IConfig $config,
         IAppManager $appManager,
-        IServerContainer $serverContainer
+        IServerContainer $serverContainer,
+        IPreview $previewManager
     ) {
         $this->userId = $userId;
         $this->config = $config;
@@ -92,7 +94,8 @@ class WatchaShareAPIController extends ShareAPIController
             $l10n,
             $config,
             $appManager,
-            $serverContainer
+            $serverContainer,
+            $previewManager
         );
     }
 
