@@ -79,7 +79,7 @@ class WatchaShareAPIController extends ShareAPIController
         $this->userId = $userId;
         $this->config = $config;
         $this->l = $l10n;
-        $this->serviceAccountName = $this->config->getSystemValue(Synapse::SERVICE_ACCOUNT_NAME);
+        $this->serviceAccountName = Synapse::SERVICE_ACCOUNT_NAME;
         $requester = $request->getParam("requester");
 
         parent::__construct(
