@@ -130,12 +130,12 @@ function hideMutationsOnSettingsPage(addedNode) {
 }
 
 function updateGroupsNames(groupsNamesSpan) {
-    let groupsNames = groupsNamesSpan.innerText.split(", ");
-    for (let groupName of groupsNames) {
-        if (groupName.includes(watchaGroupPrefix)) {
-            i = groupsNames.indexOf(groupName);
-            groupsNames.splice(i, 1);
+    let oldGroupsNames = groupsNamesSpan.innerText.split(", ");
+    let newGroupNames = []
+    for (let groupName of oldGroupsNames) {
+        if (!groupName.includes(watchaGroupPrefix)) {
+            newGroupNames.push(groupName)
         }
     }
-    groupsNamesSpan.innerText = groupsNames.join(", ");
+    groupsNamesSpan.innerText = newGroupNames.join(", ");
 }
