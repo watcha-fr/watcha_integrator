@@ -20,7 +20,7 @@
  */
 
 // echo -n watcha | md5sum
-const watchaGroupPrefix = "c4d96a06b758a7ed12f897690828e414_";
+const watchaGroupPrefix = "c4d96a06b7_";
 
 window.addEventListener("load", hideLoadedElementOnSettingsPage);
 window.addEventListener("load", hideBodyMutation);
