@@ -40,6 +40,9 @@ use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\Share\IManager;
 
+const SERVICE_ACCOUNT_NAME = 'c4d96a06b7_watcha_service_account';
+
+
 class WatchaShareAPIController extends ShareAPIController
 {
 
@@ -79,7 +82,6 @@ class WatchaShareAPIController extends ShareAPIController
         $this->userId = $userId;
         $this->config = $config;
         $this->l = $l10n;
-        $this->serviceAccountName = Synapse::SERVICE_ACCOUNT_NAME;
         $requester = $request->getParam("requester");
 
         parent::__construct(
@@ -115,7 +117,7 @@ class WatchaShareAPIController extends ShareAPIController
         int $shareType = -1,
         string $shareWith = null
     ) {
-        if ($this->userId !== $this->serviceAccountName) {
+        if ($this->userId !== SERVICE_ACCOUNT_NAME) {
             throw new OCSForbiddenException($this->l->t('Only the Synapse account service can create a share.'));
         }
 
@@ -140,7 +142,7 @@ class WatchaShareAPIController extends ShareAPIController
     public function deleteWatchaShare(
         string $id
     ) {
-        if ($this->userId !== $this->serviceAccountName) {
+        if ($this->userId !== SERVICE_ACCOUNT_NAME) {
             throw new OCSForbiddenException($this->l->t('Only the Synapse account service can create a share.'));
         }
 
