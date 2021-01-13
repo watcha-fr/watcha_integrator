@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace OCA\Watcha_Integrator\Controller;
 
-use OCA\Watcha_Integrator\Extension\Synapse;
 use OCA\Files_Sharing\Controller\ShareAPIController;
 use OCP\App\IAppManager;
 use OCP\AppFramework\OCS\OCSForbiddenException;
@@ -39,6 +38,7 @@ use OCP\IServerContainer;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\Share\IManager;
+use OCP\UserStatus\IManager as IUserStatusManager;
 
 const SERVICE_ACCOUNT_NAME = 'c4d96a06b7_watcha_service_account';
 
@@ -50,33 +50,34 @@ class WatchaShareAPIController extends ShareAPIController
      * Share20OCS constructor.
      *
      * @param string $appName
-     * @param IRequest $request
-     * @param IManager $shareManager
-     * @param IGroupManager $groupManager
-     * @param IUserManager $userManager
-     * @param IRootFolder $rootFolder
-     * @param IURLGenerator $urlGenerator
-     * @param string $userId
-     * @param IL10N $l10n
-     * @param IConfig $config
-     * @param IAppManager $appManager
-     * @param IServerContainer $serverContainer
-     * @var IConfig private $config
+	 * @param IRequest $request
+	 * @param IManager $shareManager
+	 * @param IGroupManager $groupManager
+	 * @param IUserManager $userManager
+	 * @param IRootFolder $rootFolder
+	 * @param IURLGenerator $urlGenerator
+	 * @param string $userId
+	 * @param IL10N $l10n
+	 * @param IConfig $config
+	 * @param IAppManager $appManager
+	 * @param IServerContainer $serverContainer
+	 * @param IUserStatusManager $userStatusManager
      */
 
     public function __construct(
         string $appName,
-        IRequest $request,
-        IManager $shareManager,
-        IGroupManager $groupManager,
-        IUserManager $userManager,
-        IRootFolder $rootFolder,
-        IURLGenerator $urlGenerator,
-        string $userId = null,
-        IL10N $l10n,
-        IConfig $config,
-        IAppManager $appManager,
-        IServerContainer $serverContainer,
+		IRequest $request,
+		IManager $shareManager,
+		IGroupManager $groupManager,
+		IUserManager $userManager,
+		IRootFolder $rootFolder,
+		IURLGenerator $urlGenerator,
+		string $userId = null,
+		IL10N $l10n,
+		IConfig $config,
+		IAppManager $appManager,
+		IServerContainer $serverContainer,
+		IUserStatusManager $userStatusManager,
         IPreview $previewManager
     ) {
         $this->userId = $userId;
@@ -97,6 +98,7 @@ class WatchaShareAPIController extends ShareAPIController
             $config,
             $appManager,
             $serverContainer,
+            $userStatusManager,
             $previewManager
         );
     }
