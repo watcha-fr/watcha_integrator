@@ -50,34 +50,34 @@ class WatchaShareAPIController extends ShareAPIController
      * Share20OCS constructor.
      *
      * @param string $appName
-	 * @param IRequest $request
-	 * @param IManager $shareManager
-	 * @param IGroupManager $groupManager
-	 * @param IUserManager $userManager
-	 * @param IRootFolder $rootFolder
-	 * @param IURLGenerator $urlGenerator
-	 * @param string $userId
-	 * @param IL10N $l10n
-	 * @param IConfig $config
-	 * @param IAppManager $appManager
-	 * @param IServerContainer $serverContainer
-	 * @param IUserStatusManager $userStatusManager
+     * @param IRequest $request
+     * @param IManager $shareManager
+     * @param IGroupManager $groupManager
+     * @param IUserManager $userManager
+     * @param IRootFolder $rootFolder
+     * @param IURLGenerator $urlGenerator
+     * @param string $userId
+     * @param IL10N $l10n
+     * @param IConfig $config
+     * @param IAppManager $appManager
+     * @param IServerContainer $serverContainer
+     * @param IUserStatusManager $userStatusManager
      */
 
     public function __construct(
         string $appName,
-		IRequest $request,
-		IManager $shareManager,
-		IGroupManager $groupManager,
-		IUserManager $userManager,
-		IRootFolder $rootFolder,
-		IURLGenerator $urlGenerator,
-		string $userId = null,
-		IL10N $l10n,
-		IConfig $config,
-		IAppManager $appManager,
-		IServerContainer $serverContainer,
-		IUserStatusManager $userStatusManager,
+        IRequest $request,
+        IManager $shareManager,
+        IGroupManager $groupManager,
+        IUserManager $userManager,
+        IRootFolder $rootFolder,
+        IURLGenerator $urlGenerator,
+        string $userId = null,
+        IL10N $l10n,
+        IConfig $config,
+        IAppManager $appManager,
+        IServerContainer $serverContainer,
+        IUserStatusManager $userStatusManager,
         IPreview $previewManager
     ) {
         $this->userId = $userId;
