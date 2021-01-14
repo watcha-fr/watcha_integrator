@@ -25,7 +25,6 @@ declare(strict_types=1);
 
 namespace OCA\Watcha_Integrator\Controller;
 
-use OCA\Watcha_Integrator\Extension\Synapse;
 use OCA\Files_Sharing\Controller\ShareAPIController;
 use OCP\App\IAppManager;
 use OCP\AppFramework\OCS\OCSForbiddenException;
@@ -39,6 +38,7 @@ use OCP\IServerContainer;
 use OCP\IURLGenerator;
 use OCP\IUserManager;
 use OCP\Share\IManager;
+use OCP\UserStatus\IManager as IUserStatusManager;
 
 const SERVICE_ACCOUNT_NAME = 'c4d96a06b7_watcha_service_account';
 
@@ -61,7 +61,7 @@ class WatchaShareAPIController extends ShareAPIController
      * @param IConfig $config
      * @param IAppManager $appManager
      * @param IServerContainer $serverContainer
-     * @var IConfig private $config
+     * @param IUserStatusManager $userStatusManager
      */
 
     public function __construct(
@@ -77,6 +77,7 @@ class WatchaShareAPIController extends ShareAPIController
         IConfig $config,
         IAppManager $appManager,
         IServerContainer $serverContainer,
+        IUserStatusManager $userStatusManager,
         IPreview $previewManager
     ) {
         $this->userId = $userId;
@@ -97,6 +98,7 @@ class WatchaShareAPIController extends ShareAPIController
             $config,
             $appManager,
             $serverContainer,
+            $userStatusManager,
             $previewManager
         );
     }
